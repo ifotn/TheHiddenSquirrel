@@ -18,5 +18,11 @@ namespace TheHiddenSquirrel.Controllers
             // pass categories list for display when loading the view
             return View(categories);
         }
+
+        public IActionResult Create()
+        {
+            // display blank form to add a new category
+            return View();
+        }
     }
 }
