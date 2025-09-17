@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TheHiddenSquirrel.Models;
 
 namespace TheHiddenSquirrel.Data
 {
@@ -9,5 +10,6 @@ namespace TheHiddenSquirrel.Data
             : base(options)
         {
         }
+        public DbSet<TheHiddenSquirrel.Models.Category> Category { get; set; } = default!;
     }
 }
