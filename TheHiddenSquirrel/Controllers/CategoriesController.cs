@@ -24,5 +24,11 @@ namespace TheHiddenSquirrel.Controllers
             // display blank form to add a new category
             return View();
         }
+
+        public IActionResult Edit()
+        {
+            // display populated form to edit a category
+            return View();
+        }
     }
 }

@@ -13,5 +13,11 @@ namespace TheHiddenSquirrel.Controllers
             // display blank form to add a new product
             return View();
         }
+
+        public IActionResult Edit()
+        {
+            // display populated form to edit a product
+            return View();
+        }
     }
 }
