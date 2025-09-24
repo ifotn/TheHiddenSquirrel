@@ -56,10 +56,37 @@ namespace TheHiddenSquirrel.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit()
+        // GET: /Categories/Edit/5 => show form populated with current Name for selected Category
+        public IActionResult Edit(int id)
         {
+            // search db for Category with this id
+            var category = _context.Category.Find(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
             // display populated form to edit a category
-            return View();
+            return View(category);
+        }
+
+        // POST: /Categories/Edit/5 => process update of selected Category in the db
+        [HttpPost]
+        public IActionResult Edit(int id, [Bind("CategoryId,Name")] Category category)
+        {
+            // validate input
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // update db
+            _context.Category.Update(category);
+            _context.SaveChanges();
+
+            // redirect to list on Index
+            return RedirectToAction("Index");
         }
     }
 }
