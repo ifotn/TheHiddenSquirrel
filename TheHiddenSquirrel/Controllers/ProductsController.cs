@@ -94,5 +94,21 @@ namespace TheHiddenSquirrel.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        // GET: /Products/Delete/3 => remove Product and refresh list
+        public IActionResult Delete(int id)
+        {
+            var product = _context.Product.Find(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // delete & redirect
+            _context.Product.Remove(product);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
