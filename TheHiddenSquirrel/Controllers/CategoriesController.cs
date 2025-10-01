@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
 
@@ -86,6 +87,24 @@ namespace TheHiddenSquirrel.Controllers
             _context.SaveChanges();
 
             // redirect to list on Index
+            return RedirectToAction("Index");
+        }
+
+        // GET: /Categories/Delete/2 => delete selected Category from db
+        public IActionResult Delete(int id)
+        {
+            // get record to be deleted
+            var category = _context.Category.Find(id);
+
+            // id not found handler
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // remove & redirect
+            _context.Category.Remove(category);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
     }

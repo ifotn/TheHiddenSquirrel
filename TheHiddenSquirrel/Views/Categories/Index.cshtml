@@ -19,9 +19,13 @@
         <tr>
             <td>@category.Name</td>
             <td>
-                <a asp-controller="Categories" asp-action="Edit" asp-route-id="@category.CategoryId">
+                <a asp-controller="Categories" asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-primary">
                      Edit
-                </a>                   
+                </a>
+                <a asp-controller="Categories" asp-action="Delete" asp-route-id="@category.CategoryId"
+                    class="btn btn-danger" onclick="return confirmDelete();">
+                    Delete
+                </a>
             </td>
         </tr>
     }
