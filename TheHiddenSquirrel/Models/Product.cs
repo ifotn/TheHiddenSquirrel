@@ -1,11 +1,18 @@
-﻿namespace TheHiddenSquirrel.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TheHiddenSquirrel.Models
 {
     public class Product
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:c}")]  // display as currency: 0 is the value, c is the currency format
+        [Range(0,10000)]
         public decimal Price { get; set; }
+
+
         public int? Age { get; set; }
         public string? Image { get; set; }
         public int? Rating { get; set; }

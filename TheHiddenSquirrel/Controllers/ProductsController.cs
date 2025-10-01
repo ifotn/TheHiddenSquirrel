@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
 
@@ -18,8 +19,12 @@ namespace TheHiddenSquirrel.Controllers
 
         public IActionResult Index()
         {
-            // fetch Products
-            var products = _context.Product.ToList();
+            // fetch Products, JOIN to Category model to include Category Name values, sorted a-z by Product Name
+            // "p" means the result of the Product DbSet query
+            var products = _context.Product
+                .OrderBy(p => p.Name)
+                .Include(p => p.Category)
+                .ToList();
 
             // show view & display Product data
             return View(products);
@@ -53,10 +58,41 @@ namespace TheHiddenSquirrel.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit()
+        // GET: /Products/Edit/6 => display form with Product data populated
+        public IActionResult Edit(int id) 
         {
+            var product = _context.Product.Find(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // fetch list of Categories for Category dropdown in the form
+            ViewBag.CategoryId = new SelectList(_context.Category.ToList(), "CategoryId", "Name");
+
             // display populated form to edit a product
-            return View();
+            return View(product);
+        }
+
+        // POST: /Products/Edit/6 => save Product updates to db
+        [HttpPost]
+        public IActionResult Edit(int id, [Bind("ProductId,Name,Description,Price,Age,Image,Rating,CategoryId")] Product product)
+        {
+            // validate
+            if (!ModelState.IsValid)
+            {
+                // fetch list of Categories for Category dropdown in the form
+                ViewBag.CategoryId = new SelectList(_context.Category.ToList(), "CategoryId", "Name");
+
+                // show Edit page again w/current values still in it
+                return View(product);
+            }
+
+            // save & redirect
+            _context.Product.Update(product);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
