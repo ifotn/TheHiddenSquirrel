@@ -14,6 +14,6 @@
         public int CategoryId { get; set; }
 
         // parent reference to Category object.  Used to JOIN a Product to its parent Category.
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
     }
 }
