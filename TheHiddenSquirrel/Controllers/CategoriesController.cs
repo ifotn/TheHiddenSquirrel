@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
 
 namespace TheHiddenSquirrel.Controllers
 {
+    [Authorize(Roles = "Administrator")] // restrict all methods to Administrator role only
     public class CategoriesController : Controller
     {
         // shared db connection obj

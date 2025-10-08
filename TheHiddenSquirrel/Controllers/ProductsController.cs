@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TheHiddenSquirrel.Data;
@@ -6,6 +7,7 @@ using TheHiddenSquirrel.Models;
 
 namespace TheHiddenSquirrel.Controllers
 {
+    [Authorize(Roles = "Administrator")]  // restrict all methods to Administrator role only
     public class ProductsController : Controller
     {
         // shared dbcontext obj
