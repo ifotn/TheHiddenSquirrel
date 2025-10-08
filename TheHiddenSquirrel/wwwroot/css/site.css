@@ -19,6 +19,8 @@ html {
 
 body {
   margin-bottom: 60px;
+  /* apply Google font as default */
+  font-family: 'Nunito', sans-serif;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +30,29 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* override bootstrap styles with custom colour palette */
+.navbar-dark {
+    background-color: #795548;
+}
+
+.btn-primary {
+    background-color: #FF9800;
+}
+
+    .btn-primary:hover {
+        background-color: #5D4037;
+    }
+
+.btn-danger {
+    background-color: #757575;
+}
+
+    .btn-danger:hover {
+        background-color: #BDBDBD;
+    }
+
+a {
+    color: #FF9800;
 }
