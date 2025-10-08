@@ -44,6 +44,7 @@ namespace TheHiddenSquirrel.Controllers
 
         // POST: /Products/Create => validate & save new Product
         [HttpPost]
+        [ValidateAntiForgeryToken]  // protect from cross-site scripting attacks
         public IActionResult Create([Bind("Name,Description,Price,Age,Image,Rating,CategoryId")] Product product)
         {
             // validate inputs
@@ -79,6 +80,7 @@ namespace TheHiddenSquirrel.Controllers
 
         // POST: /Products/Edit/6 => save Product updates to db
         [HttpPost]
+        [ValidateAntiForgeryToken]  // protect from cross-site scripting attacks
         public IActionResult Edit(int id, [Bind("ProductId,Name,Description,Price,Age,Image,Rating,CategoryId")] Product product)
         {
             // validate

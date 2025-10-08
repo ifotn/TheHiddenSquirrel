@@ -44,6 +44,7 @@ namespace TheHiddenSquirrel.Controllers
 
         // POST: /Categories/Create => process form submission to save new Category
         [HttpPost]
+        [ValidateAntiForgeryToken]  // protect from cross-site scripting attacks
         public IActionResult Create([Bind("Name")] Category category)
         {
             // validate category first
@@ -77,6 +78,7 @@ namespace TheHiddenSquirrel.Controllers
 
         // POST: /Categories/Edit/5 => process update of selected Category in the db
         [HttpPost]
+        [ValidateAntiForgeryToken]  // protect from cross-site scripting attacks
         public IActionResult Edit(int id, [Bind("CategoryId,Name")] Category category)
         {
             // validate input
