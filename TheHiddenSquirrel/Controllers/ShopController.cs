@@ -97,5 +97,18 @@ namespace TheHiddenSquirrel.Controllers
             // send back the CustomerId string
             return HttpContext.Session.GetString("CustomerId");
         }
+
+        // GET: /Shop/Cart => display user's full cart
+        public IActionResult Cart()
+        {
+            // identify customer from session var
+            var customerId = GetCustomerId();
+
+            // fetch customer's cart items from db
+            var cartItems = _context.CartItem.Where(c => c.CustomerId == customerId).ToList();
+
+            // show cart page w/data
+            return View(cartItems);
+        }
     }
 }
