@@ -39,5 +39,21 @@ namespace TheHiddenSquirrel.Controllers
             // show view and pass query result
             return View(products);
         }
+
+        // GET: /Shop/ProductDetails/27 => show Product Detail 
+        public IActionResult ProductDetails(int id)
+        {
+            // fetch selected product
+            var product = _context.Product.Find(id);
+
+            // error handling if id doesn't exist
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // pass to view for display
+            return View(product);
+        }
     }
 }

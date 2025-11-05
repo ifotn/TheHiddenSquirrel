@@ -9,11 +9,14 @@
     {
         <article class="col-lg-4 mb-3">
             <div class="card text-center h-200">
-                <div class="card-body">
+                <a class="card-body" asp-action="ProductDetails" asp-route-id="@product.ProductId">
                     <h2>
                         @product.Name
                     </h2>
-                </div>
+                    <img src="~/img/placeholder.png" alt="Product Photo" />
+                    <p>@String.Format("{0:c}", product.Price)</p>
+                    <p>@product.Rating Stars</p>
+                </a>
             </div>
         </article>
     }

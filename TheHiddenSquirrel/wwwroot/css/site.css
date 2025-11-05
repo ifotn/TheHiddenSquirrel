@@ -56,3 +56,7 @@ body {
 a {
     color: #FF9800;
 }
+
+a.card-body {
+    text-decoration: none;
+}
