@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = ViewData["Category"];
+}
+<h1>@ViewData["Category"]</h1>
+<h2>@Model.Count() Results</h2>
+<section class="row">
+    @foreach (var product in Model)
+    {
+        <article class="col-lg-4 mb-3">
+            <div class="card text-center h-200">
+                <div class="card-body">
+                    <h2>
+                        @product.Name
+                    </h2>
+                </div>
+            </div>
+        </article>
+    }
+</section>

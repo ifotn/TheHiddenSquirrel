@@ -23,5 +23,21 @@ namespace TheHiddenSquirrel.Controllers
             // show view and pass categories list
             return View(categories);
         }
+
+        // GET: /Shop/Products/32 => show Products from selected Category
+        public IActionResult Products(int id)
+        {
+            // fetch products ONLY for selected category
+            var products = _context.Product.Where(p => p.CategoryId == id)
+                .OrderBy(p => p.Name)
+                .ToList();
+
+            // fetch category name for page heading & title
+            var category = _context.Category.Find(id);
+            ViewData["Category"] = category.Name;
+
+            // show view and pass query result
+            return View(products);
+        }
     }
 }
