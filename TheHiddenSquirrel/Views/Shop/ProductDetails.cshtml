@@ -1,13 +1,12 @@
 ﻿@model TheHiddenSquirrel.Models.Product
 
 @{
-    ViewData["Title"] = "ProductDetails";
+    ViewData["Title"] = "Product Details";
 }
 
-<h1>ProductDetails</h1>
+<h1>Product Details</h1>
 
 <div>
-    <h4>Product</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,33 +27,36 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.CategoryId)
-        </dd>
+        @if (Model.Age != null)
+        {
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Age)
+            </dd>
+        }
+        @if (Model.Rating != null)
+        {
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Rating)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Rating)
+            </dd>
+        }
     </dl>
+    <img src="~/img/placeholder.png" alt="Product Photo" />
 </div>
+<form method="post" action="/Shop/AddToCart">
+    @Html.AntiForgeryToken()
+    <fieldset class="m-3">
+        <label for="Quantity">Quantity:</label>
+        <input name="Quantity" required type="number" min="1" max="9999" />    
+    </fieldset>
+    <input name="ProductId" type="hidden" value="@Model.ProductId" />
+    <button class="btn btn-primary">Add to Cart</button>
+</form>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
