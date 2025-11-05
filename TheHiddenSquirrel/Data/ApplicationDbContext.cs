@@ -12,5 +12,6 @@ namespace TheHiddenSquirrel.Data
         }
         public DbSet<TheHiddenSquirrel.Models.Category> Category { get; set; } = default!;
         public DbSet<TheHiddenSquirrel.Models.Product> Product { get; set; } = default!;
+        public DbSet<TheHiddenSquirrel.Models.CartItem> CartItem { get; set; } = default!;
     }
 }

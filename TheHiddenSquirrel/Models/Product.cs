@@ -22,5 +22,8 @@ namespace TheHiddenSquirrel.Models
 
         // parent reference to Category object.  Used to JOIN a Product to its parent Category.
         public Category? Category { get; set; }
+
+        // child ref to CartItem: 1 product => Many cart items
+        public List<CartItem>? CartItems { get; set; }
     }
 }
