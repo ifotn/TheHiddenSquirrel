@@ -222,5 +222,38 @@ namespace TheHiddenSquirrel.Controllers
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
+
+        // GET: /Shop/SaveOrder => create order, move cart items to order detail, empty cart
+        [Authorize]
+        public IActionResult SaveOrder()
+        {
+            // get order from session var => save to db
+            var order = HttpContext.Session.GetObject<Order>("Order");
+            _context.Order.Add(order);
+            _context.SaveChanges();
+
+            // save cart items as order details then clear cart items
+            var cartItems = _context.CartItem.Where(c => c.CustomerId == GetCustomerId());
+
+            foreach (var item in cartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    Quantity = item.Quantity,
+                    ProductId = item.ProductId,
+                    Price = item.Price,
+                    OrderId = order.OrderId // FK
+                };
+                _context.OrderDetail.Add(orderDetail);
+                _context.CartItem.Remove(item);
+            }
+            _context.SaveChanges();
+
+            // empty session var
+            HttpContext.Session.Clear();
+
+            // show order confirmation
+            return RedirectToAction("Details", "Orders", new { @id = order.OrderId });
+        }
     }
 }
