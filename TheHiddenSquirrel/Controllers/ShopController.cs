@@ -133,6 +133,11 @@ namespace TheHiddenSquirrel.Controllers
                 .Include(c => c.Product)  // join to parent Product to also get Product Name
                 .ToList();
 
+            // set session var to current item count to show in navbar badge
+            var itemCount = (from c in cartItems
+                             select c.Quantity).Sum();
+            HttpContext.Session.SetInt32("ItemCount", itemCount);
+
             // show cart page w/data
             return View(cartItems);
         }

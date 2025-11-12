@@ -37,7 +37,7 @@ body {
     background-color: #795548;
 }
 
-.btn-primary {
+.btn-primary, .badge-secondary {
     background-color: #FF9800;
 }
 

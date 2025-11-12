@@ -6,57 +6,65 @@
 }
 
 <h1>Cart</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-            total += (item.Quantity * item.Price);
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <thead>
             <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+                total += (item.Quantity * item.Price);
+                <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                    <div>
+                        <img src="~/img/placeholder.png" alt="Product Image" />
+                    </div>
+                </td>
+                <td>
+                    <a asp-action="RemoveFromCart" asp-route-id="@item.CartItemId">Remove</a>
+                </td>
+            </tr>
+    }
+        <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
+                <a asp-action="Index" class="btn btn-primary">
+                    Continue Shopping
+                </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @String.Format("{0:c}", total)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-                <div>
-                    <img src="~/img/placeholder.png" alt="Product Image" />
-                </div>
-            </td>
-            <td>
-                <a asp-action="RemoveFromCart" asp-route-id="@item.CartItemId">Remove</a>
+                <a asp-action="Checkout" class="btn btn-primary">
+                    Checkout
+                </a>
             </td>
         </tr>
+        </tbody>
+    </table>
 }
-    <tr>
-        <td>
-            <a asp-action="Index" class="btn btn-primary">
-                Continue Shopping
-            </a>
-        </td>
-        <td>
-            @String.Format("{0:c}", total)
-        </td>
-        <td>
-            <a asp-action="Checkout" class="btn btn-primary">
-                Checkout
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+else
+{
+    <h2>Your Cart is empty.</h2>
+    <a asp-action="Index" class="btn btn-primary">Start Shopping</a>
+}
+
