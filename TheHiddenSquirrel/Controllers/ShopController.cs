@@ -148,5 +148,25 @@ namespace TheHiddenSquirrel.Controllers
         {
             return View();
         }
+
+        // POST: /Shop/Checkout => process Checkout form & save values to Session var before payment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult Checkout([Bind("FirstName,LastName,Address,City,Province,PostalCode,Phone")] Order order)
+        {
+            // auto-fill date, total, customerId
+            order.OrderDate = DateTime.Now;
+            order.CustomerId = User.Identity.Name;
+
+            // calc order total
+            order.OrderTotal = (from c in _context.CartItem
+                                where c.CustomerId == GetCustomerId()
+                                select c.Quantity * c.Price).Sum();
+
+            // store order in Session var
+            HttpContext.Session.SetObject("Order", order);
+            return RedirectToAction("Payment");
+        }
     }
 }
