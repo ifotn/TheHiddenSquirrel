@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.BillingPortal;
+using Stripe.Checkout;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
 
@@ -11,10 +14,14 @@ namespace TheHiddenSquirrel.Controllers
         // shared db connection
         private readonly ApplicationDbContext _context;
 
+        // config var to read Stripe Key from appsettings
+        private readonly IConfiguration _configuration;
+
         // constructor to initialize db connection
-        public ShopController(ApplicationDbContext context)
+        public ShopController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: /Shop/Index => show Categories as cards so user can select one
@@ -167,6 +174,53 @@ namespace TheHiddenSquirrel.Controllers
             // store order in Session var
             HttpContext.Session.SetObject("Order", order);
             return RedirectToAction("Payment");
+        }
+
+        // GET: /Shop/Payment => invoke Stripe Payment page
+        [Authorize]
+        public IActionResult Payment()
+        {
+            // get order from session var so we can read the OrderTotal
+            var order = HttpContext.Session.GetObject<Order>("Order");
+            var orderTotal = order.OrderTotal;
+
+            // get Stripe API key from config
+            StripeConfiguration.ApiKey = _configuration["StripeSecretKey"];
+
+            // set up Stripe payment
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string>
+                {
+                    "card"
+                },
+                LineItems = new List<SessionLineItemOptions> { 
+                    new SessionLineItemOptions
+                    {
+                        Quantity = 1,
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long?)(orderTotal * 100), // amount in cents
+                            Currency = "cad",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "The Hidden Squirrel Purchase"
+                            }
+                        }
+                    }
+                },
+                Mode = "payment",
+                SuccessUrl = "https://" + Request.Host + "/Shop/SaveOrder",
+                CancelUrl = "https://" + Request.Host + "/Shop/Cart"
+            };
+
+            // now invoke Stripe payment
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+
+            // after Payment, redirect based on success / cancel urls
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
     }
 }
