@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
@@ -139,6 +140,13 @@ namespace TheHiddenSquirrel.Controllers
 
             // refresh cart
             return RedirectToAction("Cart");
+        }
+
+        // GET: /Shop/Checkout => show blank form to capture customer details
+        [Authorize]
+        public IActionResult Checkout()
+        {
+            return View();
         }
     }
 }
