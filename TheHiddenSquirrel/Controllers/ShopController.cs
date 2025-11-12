@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TheHiddenSquirrel.Data;
 using TheHiddenSquirrel.Models;
 
@@ -69,17 +70,31 @@ namespace TheHiddenSquirrel.Controllers
             // set id for cart using session var
             var customerId = GetCustomerId();
 
-            // create & save new cart item
-            var cartItem = new CartItem
-            {
-                Quantity = Quantity,
-                ProductId = ProductId,
-                Price = price,
-                CustomerId = customerId
-            };
+            // check if this product is already in customer's cart
+            var cartItem = _context.CartItem
+                .Where(c => c.ProductId == ProductId && c.CustomerId == customerId)
+                .SingleOrDefault();  // get 1 record only not a list
 
-            _context.CartItem.Add(cartItem);
-            _context.SaveChanges();
+            if (cartItem == null)
+            {
+                // create & save new cart item
+                var newCartItem = new CartItem
+                {
+                    Quantity = Quantity,
+                    ProductId = ProductId,
+                    Price = price,
+                    CustomerId = customerId
+                };
+
+                _context.CartItem.Add(newCartItem);
+            }
+            else
+            {
+                // update quantity on existing cart item
+                cartItem.Quantity += Quantity;
+                _context.CartItem.Update(cartItem);
+            }
+                _context.SaveChanges();
 
             // redirect to cart
             return RedirectToAction("Cart");
@@ -105,10 +120,25 @@ namespace TheHiddenSquirrel.Controllers
             var customerId = GetCustomerId();
 
             // fetch customer's cart items from db
-            var cartItems = _context.CartItem.Where(c => c.CustomerId == customerId).ToList();
+            var cartItems = _context.CartItem
+                .Where(c => c.CustomerId == customerId)
+                .Include(c => c.Product)  // join to parent Product to also get Product Name
+                .ToList();
 
             // show cart page w/data
             return View(cartItems);
+        }
+
+        // GET: /Shop/RemoveFromCart/28 => remove item from user's cart
+        public IActionResult RemoveFromCart(int id)
+        {
+            // find and remove this cart item
+            var cartItem = _context.CartItem.Find(id);
+            _context.CartItem.Remove(cartItem);
+            _context.SaveChanges();
+
+            // refresh cart
+            return RedirectToAction("Cart");
         }
     }
 }

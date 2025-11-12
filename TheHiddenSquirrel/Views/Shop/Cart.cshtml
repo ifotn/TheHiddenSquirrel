@@ -2,13 +2,11 @@
 
 @{
     ViewData["Title"] = "Cart";
+    decimal total = 0;
 }
 
 <h1>Cart</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,9 +17,6 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Product)
             </th>
             <th></th>
@@ -29,7 +24,8 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            total += (item.Quantity * item.Price);
+            <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
             </td>
@@ -37,17 +33,30 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CustomerId)
+                @Html.DisplayFor(modelItem => item.Product.Name)
+                <div>
+                    <img src="~/img/placeholder.png" alt="Product Image" />
+                </div>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CartItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CartItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CartItemId">Delete</a>
+                <a asp-action="RemoveFromCart" asp-route-id="@item.CartItemId">Remove</a>
             </td>
         </tr>
 }
+    <tr>
+        <td>
+            <a asp-action="Index" class="btn btn-primary">
+                Continue Shopping
+            </a>
+        </td>
+        <td>
+            @String.Format("{0:c}", total)
+        </td>
+        <td>
+            <a asp-action="Checkout" class="btn btn-primary">
+                Checkout
+            </a>
+        </td>
+    </tr>
     </tbody>
 </table>
