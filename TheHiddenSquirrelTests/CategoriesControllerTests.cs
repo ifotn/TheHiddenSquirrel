@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheHiddenSquirrel.Controllers;
 using TheHiddenSquirrel.Data;
@@ -33,7 +34,56 @@ public class CategoriesControllerTests
     }
 
     [TestMethod]
-    public void TestMethod1()
+    public void IndexReturnsView() // check correct view
     {
+        // arrange - all done in TestInitialize
+
+        // act
+        var result = (ViewResult)controller.Index();
+
+        // assert
+        Assert.AreEqual("Index", result.ViewName);
+    }
+
+    [TestMethod]
+    public void IndexReturnsCategories() // check correct data
+    {
+        // arrange - all done in TestInitialize
+
+        // act
+        var result = (ViewResult)controller.Index();
+
+        // assert - is category list in db the same as the data shown in the view?
+        CollectionAssert.AreEqual(_context.Category.ToList(), (List<Category>)result.Model);
+    }
+
+    [TestMethod]
+    public void EditGetInvalidIdReturns404()
+    {
+        // act
+        var result = (ViewResult)controller.Edit(-4);
+
+        // assert
+        Assert.AreEqual("404", result.ViewName);
+    }
+
+    [TestMethod]
+    public void EditGetValidIdReturnsView()
+    {
+        // act - must use valid id from in-memory db above
+        var result = (ViewResult)controller.Edit(128);
+
+        // assert
+        Assert.AreEqual("Edit", result.ViewName);
+    }
+
+    [TestMethod]
+    public void EditGetValidIdReturnsCategory()
+    {
+        // act - use valid id from in-memory db
+        var result = (ViewResult)controller.Edit(128);
+
+        // assert
+        Assert.AreEqual(_context.Category.Find(128), (Category)result.Model);
     }
 }

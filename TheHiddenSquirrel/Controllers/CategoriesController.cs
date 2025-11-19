@@ -32,8 +32,8 @@ namespace TheHiddenSquirrel.Controllers
             // use DbSet to fetch list of categories from db
             var categories = _context.Category.ToList();
 
-            // pass categories list for display when loading the view
-            return View(categories);
+            // pass categories list for display when loading the view. Explicitly specify view name is Index
+            return View("Index", categories);
         }
 
         public IActionResult Create()
@@ -69,11 +69,11 @@ namespace TheHiddenSquirrel.Controllers
 
             if (category == null)
             {
-                return NotFound();
+                return View("404");
             }
 
-            // display populated form to edit a category
-            return View(category);
+            // display populated form to edit a category & specify viewname
+            return View("Edit", category);
         }
 
         // POST: /Categories/Edit/5 => process update of selected Category in the db
