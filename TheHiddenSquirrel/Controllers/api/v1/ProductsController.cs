@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TheHiddenSquirrel.Data;
+using TheHiddenSquirrel.Models;
 
 namespace TheHiddenSquirrel.Controllers.api.v1
 {
@@ -43,12 +44,21 @@ namespace TheHiddenSquirrel.Controllers.api.v1
             return Ok(product);
         }
 
-        //// POST: /api/v1/products => insert new product from request body
-        //[HttpPost]
-        //public IActionResult Create(Product product)
-        //{
+        // POST: /api/v1/products => insert new product from request body
+        [HttpPost]
+        public IActionResult Create(Product product)
+        {
+            // validate for model errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //}
+            // insert to db
+            _context.Product.Add(product);
+            _context.SaveChanges();
+            return CreatedAtAction("Create", product);
+        }
 
     }
 }
