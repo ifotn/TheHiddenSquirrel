@@ -60,5 +60,44 @@ namespace TheHiddenSquirrel.Controllers.api.v1
             return CreatedAtAction("Create", product);
         }
 
+        // PUT: /api/v1/products/3 => updated selected product
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, Product product)
+        {
+            // validate for model errors
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // valid id in uri matches id of product object
+            if (id != product.ProductId)
+            {
+                return BadRequest("Invalid ProductId");
+            }
+
+            // update
+            _context.Product.Update(product);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        // DELETE: /api/v1/products/3 => delete selected product
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var product = _context.Product.Find(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // delete
+            _context.Product.Remove(product);
+            _context.SaveChanges();
+            return Ok();
+        }
+
     }
 }
